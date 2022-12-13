@@ -1,0 +1,332 @@
+/*****************************************
+ ** File:    Proj1.cpp
+ ** Project: CMSC 202 Project 1, Fall 2022
+ ** Author:  Brian Pham
+ ** Date:    9/29/22
+ ** Section: 11:30/12:45
+ ** E-mail:  bpham3@umbc.edu
+ **
+ ** This file contains the main driver program for Project 1.
+ ** This program is a hashtag analyzer that parses a file of
+ ** messages and a file of hashtags to see if the hashtags exist
+ ** in the messages displaying them.
+ ***********************************************/
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <cstdlib>
+#include <ctime>
+#include <cmath>
+#include <string>
+
+using namespace std;
+
+const int MAX_SIZE = 20; //Global constant designated for the maximum length of the hashtag/message array
+
+//---------------------------------------------------------------------
+// Name: checkIfValid
+// PreCondition:  The name of a text file; the array that corresponds
+//                with the text file being checked
+// PostCondition: Returns the the file name after checking to see
+//                if the file is valid
+//---------------------------------------------------------------------
+string checkIfValid(string fileName, string fileArray[]);
+
+//---------------------------------------------------------------------
+// Name: loadFile
+// PreCondition:  the hashtag file array that will store the hashtags;
+//                the message file array that will store the hashtags
+// PostCondition: Loads the hashtags and messages into each corresponding
+//                array
+//---------------------------------------------------------------------
+void loadFile(string hashtagFile[], string messageFile[]);
+
+//---------------------------------------------------------------------
+// Name: processMessages
+// PreCondition:  the hashtag file array that will be iterated over;
+//                the message file array that will be iterated over
+// PostCondition: Displays the messages that match with a corresponding
+//                hashtag from the hashtag file
+//---------------------------------------------------------------------
+void processMessages(string hashtagFile[], string messageFile[]);
+
+//---------------------------------------------------------------------
+// Name: reset
+// PreCondition:  The hashtag file array that will be reset; the message
+//                file array that will be reset; the array of each ctr
+//                for each hashtag that will be reset
+// PostCondition: Each array from the parameter will be reset for a new
+//                file to analyze
+//---------------------------------------------------------------------
+string reset(string hashtagFile[], string messageFile[], int countArray[]);
+
+//---------------------------------------------------------------------
+// Name: displayCounts
+// PreCondition:  the hashtag array that will be iterated over; the
+//                count array that will be iterated over
+// PostCondition: Displays each of the hashtags in the file and their
+//                corresponding counts
+//---------------------------------------------------------------------
+void displayCounts(string hashtagFile[], int countArray[]);
+
+//---------------------------------------------------------------------
+// Name: incrementCounts
+// PreCondition:  the hashtag array that will be iterated over; the
+//                count array that will be iterated over
+// PostCondition: Displays each of the hashtags in the file and their
+//                corresponding counts
+//---------------------------------------------------------------------
+void incrementCounts(string hashtagFile[], string messageFile[], int countArray[]);
+
+int main() {
+
+  //Declared arrays used to store the hastags, messages, and counter for each hashtag
+  string hashtagFileArray[MAX_SIZE];
+  string messageFileArray[MAX_SIZE];
+  int counter[MAX_SIZE] = {0};
+  bool start = true; //boolean that basically starts the analyzer
+
+  //Simple print that instructs the user on several inputs they will have to enter to run the Hashtag Analyzer
+  cout << "Welcome to the Hashtag Analyzer" << endl;
+  cout << "You will choose a file of hashtags to search for" << endl;
+  cout << "Then you will choose a file to search for the hashtags" << endl;
+
+  //While the analyzer is running, the program will continue to run until
+  //the user as entered 'n' after analyzing one file
+  while(start) {
+    
+    string restart; //string to input y or n
+    bool ended = false;
+
+    //All function calls within the main function
+    loadFile(hashtagFileArray, messageFileArray);
+
+    processMessages(hashtagFileArray, messageFileArray);
+
+    incrementCounts(hashtagFileArray, messageFileArray, counter);
+
+    displayCounts(hashtagFileArray,  counter);
+
+    //Simple output that asks the user to enter y or n after analyzing a file
+    cout << "Would you like to analyze another file? y or n" << endl;
+    cin >> restart;
+
+    //while loop that will continue to run if the program has not ended yet
+    while(!ended) {
+
+      //if the user enters y, the hashtag array, message array, and counter array will
+      //all be reset in order to analyze the next file
+      if(restart == "y") {
+
+	ended = true;
+	cout << reset(hashtagFileArray, messageFileArray, counter) << endl;
+
+	//if the user enters n, the analyzer will no longer run and display one last output 
+      } else if(restart == "n") {
+	
+	start = false;
+	ended = true;
+
+	cout << "Thank you for using the hashtag analyzer!" << endl;
+
+	//If the user does outputs an invalid value
+      } else {
+	cout << "Please answer with 'y' or 'n'" << endl;
+      }
+    }
+  }
+
+  return 0;
+}
+
+string checkIfValid(string fileName) {
+
+  bool isNotValid = true; //declared boolean to check if the file is valid
+  fstream inputStream; //declared fstream to access the file
+  
+  do {
+
+    //Opens the file
+    inputStream.open(fileName);
+
+    //If the file was opened, the file is valid and will exit the if statement 
+    if(inputStream.is_open()) {
+      
+      inputStream.close();
+      isNotValid = false;
+
+      //If the file was invalid, the user is asked to enter another file
+    } else {
+
+      cout << "File was invalid. Please enter another file: " << endl;
+      cin >> fileName;
+
+    }
+
+    //loop will continue to run if the fileName entered is invalid
+  } while(isNotValid);
+  
+  //returns the name of the valid file
+  return fileName;
+}
+
+void loadFile(string hashtagFile[], string messageFile[]) {
+
+  //Declared strings used to store the names of the files and each line of the corresponding file
+  string hashtagFileName, messageFileName;
+  string hashtag, message;
+  //Counters for the amount of hashtags and messages
+  int hashtagCtr = 0, messageCtr = 0;
+  //Declared fstream to access the file
+  fstream inputStream;
+
+  //Asks the user to input the file name containing the hashtags
+  cout << "Please enter the file with the hashtags you would like to use:" << endl;
+  cin >> hashtagFileName;
+
+  //Calls the checkIfValid function to access the validity of the file name and sets
+  //the hashtag file name to the valid file name
+  hashtagFileName = checkIfValid(hashtagFileName);
+
+  inputStream.open(hashtagFileName);
+
+  //While there is still a hashtag in the file to be stored, the loop will store the
+  //loop will iterate through the hashtag array and store each hashtag within the array 
+  while(getline(inputStream, hashtag))
+    hashtagFile[hashtagCtr++] = hashtag;
+  
+  inputStream.close();
+
+  //Asks the user to input the file name containing the messages
+  cout << "Please enter the file with the messages you would like to parse:" << endl;
+  cin >> messageFileName;
+
+  //Calls the checkIfValid function to access the validity of the file name and sets
+  //the message file name to the valid file name
+  messageFileName = checkIfValid(messageFileName);
+
+  inputStream.open(messageFileName);
+
+  //The same process at the previous while loop occurs but with the message file and message counter
+  while(getline(inputStream, message))
+    messageFile[messageCtr++] = message;
+
+  inputStream.close();
+
+  //Output that displays that the files were important and the number of hashtags/messages loaded
+  cout << "Your file was imported!" << endl;
+  cout << "Your file was imported!" << endl;
+  cout << (messageCtr + 1) / 2 << " messages loaded." << endl;
+  cout << hashtagCtr << " hashtags loaded." << endl;
+
+}
+
+void processMessages(string hashtagFile[], string messageFile[]) {
+
+  int hashtagIndex = 0, messageIndex = 0, ctr = 0;
+
+  //Iterates through the through the hashtag file array to define its length
+  for(int i = 0; i < MAX_SIZE; i++) {
+
+    if(hashtagFile[hashtagIndex] != "")
+      hashtagIndex++;
+
+  }
+
+  //Iterates through the through the message file array to define its length
+  for(int i = 0; i < MAX_SIZE; i++) {
+
+    if(messageFile[messageIndex] != "")
+      messageIndex++;
+
+  }
+
+  cout << "Message with matching hashtags" << endl;
+
+  //iterates through both arrays and if a hashtag matches a hashtag from a message,
+  // that particular message will be displayed
+  for(int i = 0; i < hashtagIndex; i++) {
+    for(int j = 0; j < messageIndex; j++) {
+
+      if(hashtagFile[i] == messageFile[j]) {
+
+	cout << ctr + 1 << ". " << hashtagFile[i] << " " << messageFile[j + 1] << endl;
+	cout << endl;
+	ctr++; //to increase the number so that it can be correctly displayed after every message
+
+      }
+
+    }
+  }
+}
+
+string reset(string hashtagFile[], string messageFile[], int countArray[]) {
+
+  //loop which clears the hashtag file array
+  for(int i = 0; i < MAX_SIZE; i++)
+    hashtagFile[i] = "";
+  //loop which clears the message file array
+  for(int i = 0; i < MAX_SIZE; i++)
+    messageFile[i] = "";
+  //loop which clears the counters of each hashtag
+  for(int i = 0; i < MAX_SIZE; i++)
+    countArray[i] = 0;
+
+  return "The new set of files are ready. \n";
+}
+
+void displayCounts(string hashtagFile[], int countArray[]) {
+
+  int ctr = 0;
+
+  //prints out each element within the hashtag file array and the number of
+  //times each one appeared in the message file
+  for(int i = 0; i < MAX_SIZE; i++) {
+
+    if(hashtagFile[i] != "") {
+
+      ctr++;
+      
+      cout << setw(5);
+      cout << ctr;
+      cout << setw(20);
+      cout << hashtagFile[i];
+      cout << setw(4);
+      cout << countArray[i] << endl;
+
+    }
+
+  }
+}
+
+void incrementCounts(string hashtagFile[], string messageFile[], int countArray[]) {
+
+  int hashtagIndex = 0, messageIndex = 0, ctr = 0;
+
+  //defines the length of the hashtag file array
+  for(int i = 0; i < MAX_SIZE; i++) {
+
+    if(hashtagFile[hashtagIndex] != "")
+      hashtagIndex++;
+
+  }
+
+  //defines the length of the message file array
+  for(int i = 0; i < MAX_SIZE; i++) {
+
+    if(messageFile[messageIndex] != "")
+      messageIndex++;
+
+  }
+
+  //iterates through both arrays and if a hashtag matches a hashtag from a message,
+  //the element of the count array will be incremented
+  for(int i = 0; i < hashtagIndex; i++) {
+    for(int j = 0; j < messageIndex; j++) {
+
+      if(hashtagFile[i] == messageFile[j])
+	countArray[i] += 1;
+
+    }
+  }
+}
