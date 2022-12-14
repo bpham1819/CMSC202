@@ -1,0 +1,152 @@
+/*****************************************
+ ** File:    Playlist.cpp
+ ** Project: CMSC 202 Project 3, Fall 2022
+ ** Author:  Brian Pham
+ ** Date:    11/3/2022
+ ** Section: 11:30/12:45
+ ** E-mail:  bpham3@umbc.edu
+ **
+ ** This file contains the cpp file for Playlist.h
+ ** This program is contains definitions needed to manipulate a
+ ** playlist object or pointer so that it can exists within
+ ** the MusicPlayer.
+ ***********************************************/
+#include "Playlist.h"
+
+Playlist::Playlist() {
+
+  m_head = nullptr;
+  m_tail = nullptr;
+  m_size = 0;
+
+}
+
+Playlist::~Playlist() {
+
+  while(m_size > 0) {
+
+    if(m_size == 1) {
+
+      delete m_head;
+      m_head = nullptr;
+      m_tail = nullptr;
+      m_size--;
+       
+    } else {
+    
+      Song* temp = m_head; //Create a temp node and set it to the head node
+
+      //m_head = m_head -> m_next;
+      m_head = m_head -> GetNext();
+      delete temp;
+      temp = nullptr;
+      m_size--; //Decrement the size
+
+    }
+  }
+
+}
+
+void Playlist::AddSong(string title, string artist, int year, int rank) {
+
+  Song* newSong = new Song(title, artist, year, rank);
+  
+  if(m_size == 0) {
+    m_head = newSong;
+    m_tail = newSong;
+    m_size++;
+    return;
+  } else {
+    //m_tail -> m_next = newSong;
+    m_tail -> SetNext(newSong);
+    newSong -> SetNext(nullptr);
+    m_tail = newSong;
+    m_size++;
+  }
+}
+
+Song* Playlist::GetPlaylistDetails(int location) {
+  
+  Song* curr = m_head;
+  Song* song;
+  int ctr = 0;
+  
+  while(curr != nullptr) {
+
+    if(ctr == location)
+      song = curr;
+
+    //curr = curr -> m_next;
+    curr = curr -> GetNext();
+    ctr++;
+  }
+
+  return song;
+}
+
+int Playlist::Size() {
+  return m_size;
+}
+
+void Playlist::PlayAt(int location) {
+
+  Song* curr = m_head;
+  Song* prev = m_head;
+  int ctr = 0;
+
+  if(m_size == 1) {
+    
+    delete curr;
+    curr = nullptr;
+    m_size--;
+    return;
+    
+  }
+
+  if(location == 0) {
+    
+    m_head = m_head -> GetNext();
+    delete curr;
+    m_size--;
+    return;
+
+  }
+
+  if(location == m_size) {
+
+    Song* temp = m_tail;
+
+    while(curr -> GetNext() != m_tail)
+      curr = curr -> GetNext();
+
+    m_tail = curr;
+    delete temp;
+    curr -> SetNext(nullptr);
+    m_size--;
+    return;
+    
+  }
+  
+  while(curr != nullptr) {
+      
+    if(ctr == location) {
+          
+      //prev -> m_next = curr -> m_next;
+      prev -> SetNext(curr -> GetNext());
+      delete curr;
+      m_size--;
+      return;
+      
+    }
+    
+    prev = curr;
+    //curr = curr -> m_next;
+    curr = curr -> GetNext();
+    ctr++; 
+  }
+}
+
+  
+
+  
+  
