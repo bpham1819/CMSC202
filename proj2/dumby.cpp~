@@ -1,0 +1,37 @@
+#include <iostream>
+#include <iomanip>
+#include <fstream>
+#include <cmath>
+#include <ctime>
+#include <cstdlib>
+
+#include "Player.h"
+
+using namespace std;
+
+
+int main() {
+
+  Player one;
+  Player two("Brian");
+
+  //cout << "Player one name: " << one.GetName() << endl;
+  //cout << "Player two name: " << two.GetName() << endl;
+
+  //one.SetName("Vivian");
+    
+  //cout << "Player one's new name: " << one.GetName() << endl;
+
+  
+  //cout << one.GetRaces() << endl;
+  //cout << one.GetFalls() << endl;
+
+  one.IncreaseStat();
+
+  one.GetStat(0);
+
+  one.IncreaseWins();
+  
+  one.DisplayStatus();    
+  return 0;
+}
