@@ -1,0 +1,43 @@
+#include "Landmass.h"
+
+using namespace std;
+
+Landmass::Landmass() {
+
+  m_myType = "";
+
+}
+
+// Destructor
+// Preconditions: None
+// Postconditions: None
+Landmass::~Landmass() {}
+
+// callMyType() - Prints object's type
+// Preconditions: Object exists
+// Postconditions: Object's type is printed
+void Landmass::CallMyType() {
+
+  cout << "My type is " << m_myType << endl;
+
+}
+
+  
+
+// callMyName() - Prints object's name
+// Preconditions: Object exists
+// Postconditions: Object's name is printed
+//virtual void Landmass::CallMyName() = 0; // <- Declares as purely virtual function
+
+string Landmass::GetType() {
+  return m_myType;
+}
+
+void Landmass::SetType(string type) {
+  m_myType = type;
+}
+
+// describeMe() - gives description of given landmass
+// Preconditions: None
+// Postconditions: None
+//virtual void Landmass::DescribeMe() = 0;

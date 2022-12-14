@@ -1,0 +1,60 @@
+//Title: lab5.cpp
+//Desc: To complete the DisplayDetails and GoodValue functions
+
+#include <iostream>
+#include <string>
+#include "Laptop.h"
+using namespace std;
+
+//Write the functions DisplayDetails and GoodValue here
+
+
+void GoodValue(Laptop laptop) {
+  if(laptop.WorthIt() == false) {
+    cout << "This output is totally not worth it!" << endl;
+  } else {
+    cout << "This output is totally worth it!" << endl;
+  }
+}
+
+void DisplayDetails(Laptop laptop) {
+  cout << "Laptop Brand: " << Laptop.GetBrand() << endl;
+  cout << "Cost: " << laptop.GetPrice() << endl;
+  cout << "RAM: " << laptop.GetMemory() << endl;
+  cout << "Backlit Keyboard: " << laptop.GetBacklit() << endl;
+}
+
+
+int main() {
+  Laptop Laptop1; //Creates a new laptop
+  Laptop Laptop2; //Creates a new laptop
+  cout << endl;
+
+  Laptop1.SetBrand("Apple"); //Calls the SetBrand to populate the m_brand
+  Laptop1.SetPrice(2300); //Calls the SetPrice to populate the m_price
+  Laptop1.SetMemory(16); //Calls the SetMemory to populate the m_memory
+  Laptop1.SetBacklit(true); //Calls the SetBacklit to populate the m_isBacklit
+  
+  Laptop2.SetBrand("Lenovo"); //Calls the SetBrand to populate the m_brand
+  Laptop2.SetPrice(899); //Calls the SetPrice to populate the m_price
+  Laptop2.SetMemory(16); //Calls the SetMemory to populate the m_memory
+  Laptop2.SetBacklit(true); //Calls the SetBacklit to populate the m_isBacklit
+
+  DisplayDetails(Laptop1); //Calls the function DisplayDetails (in lab5.cpp)
+  DisplayDetails(Laptop2); //Calls the function DisplayDetails (in lab5.cpp)
+
+  GoodValue(Laptop1); //Calls the function GoodValue (in lab5.cpp)
+  GoodValue(Laptop2); //Calls the function GoodValue (in lab5.cpp)
+  
+  return 0;
+}
+
+//Implement DisplayDetails here
+
+
+
+
+
+//Implement GoodValue here
+
+

@@ -1,0 +1,84 @@
+//Brian Pham
+//September 7, 2022
+//This is the code for lab 1
+#include <iostream> //including the iostream library
+#include <string>   //including the string library
+using namespace std;
+
+int main() {
+
+  //initializing the variables
+  int catAge = 0;
+  int userChoice = 0;
+  int choiceCtr = 0;
+  string catName;
+
+  //Asks the user for the cat's name
+  cout << "What is your cat's name?" << endl;
+  getline(cin, catName);
+
+  //Asks the user for the cat's age
+  cout << "How old is your cat?" << endl;
+  cin >> catAge;
+
+  //Asks the user to reenter cat's age if not valid
+  while(catAge <= 0 || catAge >= 22) {
+
+    cout << "Please enter your cat's age, it should be an integer between 0 and 22" << endl;
+    cin.clear();
+    cin >> catAge;
+
+  }
+
+  //Prints out the cat's name and age
+  cout << "Cat Name = " << catName << endl;
+  cout << "Cat's age = " << catAge << "\n" << endl;
+  
+  //Loop that repeats the menu until three choices have been made
+  do {
+    
+    cout << "What would you like to do?" << endl;
+    cout << "1. Pet " << catName << endl;
+    cout << "2. Feed " << catName << endl;
+    cout << "3. Chase " << catName << endl;
+    cout << "Enter your choice:" << endl;
+    cin >> userChoice;
+  
+    //Repeats and clarifies the previous statement if input is invalid
+    while(cin.fail() || userChoice < 1 || userChoice > 3) {
+    
+      cout << "Enter your choice (1-3):" << endl;
+      cin.clear();
+      cin.ignore(256, '\n');
+      cin >> userChoice;
+
+    }
+
+    //The conditionols that occur depending on the user's choice from 1-3
+    if(userChoice == 1)
+      cout << "You pet " << catName << " and they purr." << endl;
+    else if(userChoice == 2)
+      cout << catName << " meows gently as you feed them." << endl;
+    else
+      cout << "You chase after " << catName << " and they hiss and try to bite." << endl;
+
+    //Counter for the number of choices the user has made
+    choiceCtr++;
+    
+  }
+  while(choiceCtr < 3);
+
+  //Statement that prints after 3 choices have been made
+  cout << "That is enough for today. Good-bye" << endl;
+
+  return 0;
+}
+
+
+  
+    
+
+    
+    
+  
+
